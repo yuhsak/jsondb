@@ -18,6 +18,6 @@ services:
     command: npm run dev
   db:
     image: mongo:5.0.0
-    ports:
+    expose:
       - 27017
     command: --noscripting
