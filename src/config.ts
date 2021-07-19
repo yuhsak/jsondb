@@ -11,3 +11,5 @@ export const LOGGER = process.env.LOGGER === 'true'
 export const BODY_LIMIT = asInt(process.env.BODY_LIMIT) ?? 50000
 export const MAX_PARAM_LENGTH = asInt(process.env.MAX_PARAM_LENGTH) ?? 128
 export const ENABLE_CORS = process.env.ENABLE_CORS ? process.env.ENABLE_CORS === 'true' || (process.env.ENABLE_CORS !== 'false' && process.env.ENABLE_CORS?.split(',')) : false
+export const ENABLE_CLEANER = process.env.ENABLE_CLEANER === 'true'
+export const EXCLUDE_DB_FROM_CLEANER = process.env.EXCLUDE_DB_FROM_CLEANER ? process.env.EXCLUDE_DB_FROM_CLEANER.split(',') : []
