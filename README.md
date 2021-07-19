@@ -205,8 +205,6 @@ DELETE https://jsondb.app/db-c07f2fd8fe73045a/items/551f225bb77ea84b91a1bfaa
 }
 ```
 
-> **TODO: Complete below**
-
 ### Filter documents by query
 
 Filters can be applied through querystring.
@@ -304,6 +302,8 @@ Body: [
   }
 ]
 ```
+
+> **TODO: Complete below**
 
 ### Bulk delete
 
