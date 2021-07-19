@@ -238,7 +238,7 @@ For advanced filtering, some of the operators from MongoDB are supported.
 - $all
 - $in
 
-Filter documents which has "name" not equals to "sample-document"
+Filter documents whose "name" is not equals to "sample-document"
 
 ```
 GET https://jsondb.app/db-c07f2fd8fe73045a/items?query={"name":{"$ne":"sample-document"}}
@@ -262,7 +262,7 @@ Filter documents which has "category" to be one of ["game", "entertainment"]
 GET https://jsondb.app/db-c07f2fd8fe73045a/items?query={"category":{"$in":["game","entertainment"]}}
 ```
 
-Filter documents which has "categories" to be included all of ["game", "entertainment"]
+Filter documents which has an array field "categories" including all of ["game", "entertainment"]
 
 ```
 GET https://jsondb.app/db-c07f2fd8fe73045a/items?query={"categories":{"$all":["game","entertainment"]}}
