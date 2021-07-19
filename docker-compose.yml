@@ -11,6 +11,7 @@ services:
       - SERVER_PORT=8000
       - AES_PASSWORD=__password__
       - AES_SALT=__salt__
+      - ENABLE_CORS=true
       - LOGGER=true
     volumes:
       - .:/app

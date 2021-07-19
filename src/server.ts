@@ -4,12 +4,15 @@ import Ajv from 'ajv'
 import { db } from './routes'
 import { disconnect } from './db/client'
 
-export const build = ({
-  trustProxy = false,
-  logger = false,
-  bodyLimit = 50000,
-  maxParamLength = 128,
-}: { trustProxy?: boolean; logger?: boolean; bodyLimit?: number; maxParamLength?: number } = {}) => {
+export type BuildOption = {
+  trustProxy?: boolean
+  logger?: boolean
+  bodyLimit?: number
+  maxParamLength?: number
+  enableCors?: boolean | string[]
+}
+
+export const build = ({ trustProxy = false, logger = false, bodyLimit = 50000, maxParamLength = 128, enableCors = false }: BuildOption = {}) => {
   const server = fastify({
     ignoreTrailingSlash: true,
     keepAliveTimeout: 10000,
@@ -40,11 +43,13 @@ export const build = ({
     return { statusCode: 200, message: 'working' }
   })
   server.register(db, { prefix: '/:db' })
-  server.register(cors, {
-    origin: true,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-    credentials: true,
-  })
+
+  if (enableCors) {
+    server.register(cors, {
+      origin: enableCors,
+      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+    })
+  }
 
   server.addHook('onRequest', (req, reply, done) => {
     req.headers.authorization = req.headers.authorization?.replace(/^Bearer /, '')
