@@ -303,14 +303,226 @@ Body: [
 ]
 ```
 
-> **TODO: Complete below**
+### Private document
+
+To make document private, `Authorization` header can be specified with bearer token.
+
+Private document can't be modified and deleted without the token which was specified when the document is created.
+
+For example, "Authorization" header with "Bearer test-token" must be always specified to make any modification to this document below.
+
+**Create a private document**
+
+```
+POST https://jsondb.app/db-c07f2fd8fe73045a/items
+Headers: {
+  "Content-Type": "application/json",
+  "Authorization": "Bearer test-token"
+}
+Body: {
+  "title": "sample document"
+}
+```
+
+When token is specified in header, `GET /:db/:collection` will return the documents only with specific token.
+
+**Get private documents**
+
+```
+GET https://jsondb.app/db-c07f2fd8fe73045a/items
+Headers: {
+  "Authorization": "Bearer test-token"
+}
+```
+
+To prevent this behavior, "mode" parameter can be set in querystring.
+
+**Get all documents**
+
+```
+GET https://jsondb.app/db-c07f2fd8fe73045a/items?mode=all
+Headers: {
+  "Authorization": "Bearer test-token"
+}
+```
 
 ### Bulk delete
 
-### Private document
+To delete all of private documents, `DELETE /:db/:collection` can be requested with token.
+
+**Delete all of private documents**
+
+```
+DELETE https://jsondb.app/db-c07f2fd8fe73045a/items
+Headers: {
+  "Authorization": "Bearer test-token"
+}
+```
+
+To include non-private documents into deletion, "mode" parameter can be set to "all".
+
+**Delete all of private and non-private documents**
+
+```
+DELETE https://jsondb.app/db-c07f2fd8fe73045a/items?mode=all
+Headers: {
+  "Authorization": "Bearer test-token"
+}
+```
+
+This bulk delete operation also can be filtered like `GET`.
+
+**Delete all of private documents which has "name" to be "sample"**
+
+```
+DELETE https://jsondb.app/db-c07f2fd8fe73045a/items?query={"name":"sample"}
+Headers: {
+  "Authorization": "Bearer test-token"
+}
+```
+
+### Authentication
+
+Every database has a special collection named `auth` in which pairs of id and password can be stored.
+
+It's a toy function and too weak to use as real authentication, but actually useful for prototyping/learning to create user based apps.
+
+**(Don't use this to store sensitive user information, especially related to real payment or something.)**
+
+To create a record, make PUT request to the collection with id and password.
+
+> `password` will be encryted automatically before save.
+
+Then a response with `token` will be returned. This `token` can be used for `Authorization` header.
+
+If same id and password are specified, always same token will be returned.
+
+#### Request
+
+```
+PUT https://jsondb.app/db-c07f2fd8fe73045a/auth
+Body: {
+  "id": "test",
+  "password": "test"
+}
+```
+
+#### Response
+
+```json
+{
+  "statusCode": 200,
+  "data": {
+    "token": "952d738da7ae6b155b0302ded591123c"
+  }
+}
+```
+
+If a invalid password is specified, response with status 401 will be returned.
+
+#### Request
+
+```
+PUT https://jsondb.app/db-c07f2fd8fe73045a/auth
+Body: {
+  "id": "test",
+  "password": "test-invalid"
+}
+```
+
+#### Response
+
+```json
+{
+  "statusCode": 401,
+  "error": "Unauthorized",
+  "message": "PasswordInvalid"
+}
+```
+
+To update id, password or create new record based on Authorization token, make PATCH request with payload.
+
+**Update password for id "test"**
+
+#### Request
+
+```
+PATCH https://jsondb.app/db-c07f2fd8fe73045a/auth
+Headers: {
+  "Authorization": "Bearer 952d738da7ae6b155b0302ded591123c"
+}
+Body: {
+  "password": "changed"
+}
+```
+
+#### Response
+
+```json
+{
+  "statusCode": 200,
+  "data": {
+    "token": "952d738da7ae6b155b0302ded591123c"
+  }
+}
+```
+
+**Create new record with token "test-token"**
+
+#### Request
+
+```
+PATCH https://jsondb.app/db-c07f2fd8fe73045a/auth
+Headers: {
+  "Authorization": "Bearer test-token"
+}
+Body: {
+  "id": "new-id",
+  "password": "new-password"
+}
+```
+
+#### Response
+
+```json
+{
+  "statusCode": 200,
+  "data": {
+    "token": "test-token"
+  }
+}
+```
 
 ### Protected DB
 
+To make database protected, `x-api-key` header can be specified when a very first document is created.
+
+Protected database can't be accessed without this `x-api-key`, even for "GET" request.
+
+```
+POST https://jsondb.app/db-c07f2fd8fe73045a/items
+Headers: {
+  "Content-Type": "application/json",
+  "x-api-key": "test-api-key"
+}
+Body: {
+  "title": "sample document"
+}
+```
+
+Making db protected with `x-api-key` works only for first time document creation.
+
+That means when any document has already been created without `x-api-key` in a db, then this db never can be turned into a protected one.
+
 ### Limitation
 
+- Max 50KB of request body
+- Max 4096 length of one string field
+- Max 1024 length of one array field
+- Max 100 items of one time bulk creation
+- Documents will be deleted after 30 days from creation
+- 10 seconds of one query execution (`GET,DELETE /:db/:collection`)
+
 ### Serve own instance with Docker
+
+> **TODO: Complete this**
