@@ -209,11 +209,101 @@ DELETE https://jsondb.app/db-c07f2fd8fe73045a/items/551f225bb77ea84b91a1bfaa
 
 ### Filter documents by query
 
+Filters can be applied through querystring.
+
+Multiple fields are allowed at same time and the parameter must be a valid JSON string.
+
+```
+GET https://jsondb.app/db-c07f2fd8fe73045a/items?query={"name":"sample-document"}
+```
+
+For advanced filtering, some of the operators from MongoDB are supported.
+
+- $ne
+- $exists
+- $lt
+- $lte
+- $gt
+- $gte
+- $all
+- $in
+
+Filter documents which has "name" not equals to "sample-document"
+
+```
+GET https://jsondb.app/db-c07f2fd8fe73045a/items?query={"name":{"$ne":"sample-document"}}
+```
+
+Filter documents which has "\_createdAt" to be less than 1600000000000
+
+```
+GET https://jsondb.app/db-c07f2fd8fe73045a/items?query={"_createdAt":{"$lt":1600000000000}}
+```
+
+Filter documents which doesn't have "name" field
+
+```
+GET https://jsondb.app/db-c07f2fd8fe73045a/items?query={"name":{"$exists":false}}
+```
+
+Filter documents which has "category" to be one of ["game", "entertainment"]
+
+```
+GET https://jsondb.app/db-c07f2fd8fe73045a/items?query={"category":{"$in":["game","entertainment"]}}
+```
+
+Filter documents which has "categories" to be included all of ["game", "entertainment"]
+
+```
+GET https://jsondb.app/db-c07f2fd8fe73045a/items?query={"categories":{"$all":["game","entertainment"]}}
+```
+
 ### Sort documents
 
-### Pagination
+Sort order can be specified in querystring.
+
+Multiple fields are allowed at same time and the parameter must be a valid JSON string.
+
+```
+GET https://jsondb.app/db-c07f2fd8fe73045a/items?sort={"_createdAt":"desc"}
+GET https://jsondb.app/db-c07f2fd8fe73045a/items?sort={"age":"asc","class":"desc"}
+```
+
+### Paging
+
+Pagination can be controlled with `limit` and `skip` parameters specified as querystring.
+
+- limit
+  - default: `100`
+  - min: `1`
+  - max: `1000`
+- skip
+  - default: `0`
+  - min: `0`
+  - max: `inf`
+
+```
+GET https://jsondb.app/db-c07f2fd8fe73045a/items?limit=10&skip=2
+```
 
 ### Bulk create
+
+To create multiple documents at once, simply post an array of objects.
+
+```
+POST https://jsondb.app/db-c07f2fd8fe73045a/items
+Headers: {
+  "Content-Type": "application/json"
+}
+Body: [
+  {
+    "title": "sample document 1"
+  },
+  {
+    "title": "sample document 2"
+  }
+]
+```
 
 ### Bulk delete
 
