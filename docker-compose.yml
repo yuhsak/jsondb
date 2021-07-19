@@ -1,0 +1,22 @@
+version: '3.1'
+services:
+  api:
+    build: .
+    ports:
+      - 8000:8000
+    environment:
+      - DB_HOST=db
+      - DB_PORT=27017
+      - SERVER_HOST=0.0.0.0
+      - SERVER_PORT=8000
+      - AES_PASSWORD=__password__
+      - AES_SALT=__salt__
+      - LOGGER=true
+    volumes:
+      - .:/app
+    command: npm run dev
+  db:
+    image: mongo:5.0.0
+    ports:
+      - 27017:27017
+    command: --noscripting

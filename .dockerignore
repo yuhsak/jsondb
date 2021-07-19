@@ -1,0 +1,14 @@
+.DS_Store
+.nyc_output
+/node_modules
+/data
+/dist
+**/*.tsbuildinfo
+.env
+.envrc
+docker-compose.*.yml
+
+.gitignore
+docker-compose.yml
+Dockerfile
+/.vscode

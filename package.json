@@ -1,0 +1,39 @@
+{
+  "name": "json-db",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "tap --ts --no-coverage",
+    "clean": "rimraf dist/*",
+    "start": "node dist/app.js",
+    "build": "tsc",
+    "prebuild": "npm run clean",
+    "watch": "tsc --watch",
+    "nodemon": "nodemon --watch dist dist/app.js",
+    "dev": "npm-run-all build --parallel watch nodemon",
+    "format": "prettier --check src/**/*.ts"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^16.3.2",
+    "@types/tap": "^15.0.5",
+    "nodemon": "^2.0.12",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.3.2",
+    "rimraf": "^3.0.2",
+    "tap": "^15.0.9",
+    "ts-node": "^10.1.0",
+    "typescript": "^4.3.5"
+  },
+  "dependencies": {
+    "@sinclair/typebox": "^0.17.7",
+    "fastify": "^3.19.1",
+    "fastify-cors": "^6.0.2",
+    "fastify-plugin": "^3.0.0",
+    "mongodb": "^4.0.0",
+    "pino-pretty": "^5.1.1",
+    "what-is-that": "^1.2.8"
+  }
+}
