@@ -56,7 +56,7 @@ GET https://jsondb.app/db-c07f2fd8fe73045a/items
 }
 ```
 
-### Create a document
+### Create single document
 
 `POST /:db/:collection`
 
