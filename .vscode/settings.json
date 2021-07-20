@@ -1,4 +1,13 @@
 {
   "typescript.tsdk": "node_modules/typescript/lib",
-  "editor.defaultFormatter": "esbenp.prettier-vscode"
+  "[markdown]": {
+    "files.trimTrailingWhitespace": false,
+    "editor.defaultFormatter": "vscode.markdown-language-features"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
 }

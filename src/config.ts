@@ -27,10 +27,14 @@ export const MAX_BODY_SIZE_KB = asInt(process.env.MAX_BODY_SIZE_KB) ?? 50
 export const MAX_PARAM_LENGTH = asInt(process.env.MAX_PARAM_LENGTH) ?? 128
 export const MAX_STRING_LENGTH = asInt(process.env.MAX_STRING_LENGTH) ?? 4096
 export const MAX_ARRAY_LENGTH = asInt(process.env.MAX_ARRAY_LENGTH) ?? 1024
+export const MIN_AUTH_ID_LENGTH = asInt(process.env.MIN_AUTH_ID_LENGTH) ?? 8
 export const MAX_AUTH_ID_LENGTH = asInt(process.env.MAX_AUTH_ID_LENGTH) ?? 1024
+export const MIN_AUTH_PASSWORD_LENGTH = asInt(process.env.MIN_AUTH_PASSWORD_LENGTH) ?? 8
 export const MAX_AUTH_PASSWORD_LENGTH = asInt(process.env.MAX_AUTH_PASSWORD_LENGTH) ?? 1024
+export const MIN_API_KEY_LENGTH = asInt(process.env.MIN_API_KEY_LENGTH) ?? 8
 export const MAX_API_KEY_LENGTH = asInt(process.env.MAX_API_KEY_LENGTH) ?? 1024
 export const MAX_BULK_CREATION_LENGTH = asInt(process.env.MAX_BULK_CREATION_LENGTH) ?? 100
+export const MAX_QUERY_EXECUTION_SEC = asInt(process.env.MAX_QUERY_EXECUTION_SEC) ?? 10
 
 /** Cleanup */
 export const ENABLE_CLEANUP = process.env.ENABLE_CLEANUP === 'true'

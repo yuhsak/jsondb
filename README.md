@@ -4,16 +4,13 @@ Simple, easy, out-of-the-box HTTP based JSON store designed for tiny application
 
 ## Motivation
 
-There are a lot of free or paid services to store data as backend, and they are typically little bit complicated.
-
+There are a lot of free or paid services to store data as backend, and they are typically little bit complicated.  
 You probably have to manage credentials, authorizations and have to learn about the SDK/Library in a provided way.
 
-Especially for the developer who just started to learn web frontend (like Vue and React), sometimes it'd be too much to work with.
-
+Especially for the developer who just started to learn web frontend (like Vue and React), sometimes it'd be too much to work with.  
 To keep in focus on learning things of frontend developping, it's better to work with really simple HTTP based backend API.
 
-`jsondb` is designed to be ideal for such beginners who wants to learn managing asynchronous http requests between frontend app and backend api, but also useful for prototyping and hackathons.
-
+`jsondb` is designed to be ideal for such beginners who wants to learn managing asynchronous http requests between frontend app and backend api, but also useful for prototyping and hackathons.  
 (Heavily inspired from [`jsonbox.io`](https://github.com/vasanthv/jsonbox))
 
 ## Usage
@@ -545,4 +542,132 @@ This means that when any document has already been created without `x-api-key` i
 
 ### Serve own instance with Docker
 
-> **TODO: Complete this**
+`jsondb` is registered at [dockerhub](https://hub.docker.com/r/yuhsak/jsondb), so that you can easily serve your own instance with Docker.
+
+Note that `jsondb` uses `MongoDB` as its backed Database, there must be an accessible mongodb server before starting `jsondb` instance.
+
+While `jsondb` doesn't validate user's input query perfectly, please don't forget to serve mongodb with **--noscripting** option to avoid unexpected script injection.
+
+#### Run jsondb instance
+
+If a mongodb instance can be accessed at `localhost` and listening on port `27017`, the docker command to run jsondb instance would be something like below.
+
+```sh
+docker run -p 8000:8000 -e DB_HOST=localhost -e DB_PORT=27017 -e SERVER_HOST=localhost -e SERVER_PORT=8000 -e ENABLE_CORS=true -e ENABLE_LOGGER=true -e LOGGER_PRETTY_PRINT=true yuhsak/jsondb:latest
+```
+
+#### Example docker-compose.yml including mongodb
+
+```yaml
+version: '3.1'
+services:
+  api:
+    image: yuhsak/jsondb:latest
+    ports:
+      - 8000:8000
+    environment:
+      - DB_HOST=db
+      - DB_PORT=27017
+      - SERVER_HOST=0.0.0.0
+      - SERVER_PORT=8000
+      - ENABLE_CORS=true
+      - CORS_ORIGIN=*
+      - ENABLE_LOGGER=true
+      - LOGGER_LEVEL=info
+      - LOGGER_PRETTY_PRINT=true
+      - AES_PASSWORD=your-aes-password
+      - AES_SALT=your-aes-salt
+  db:
+    image: mongo:5.0.0
+    expose:
+      - 27017
+    volumes:
+      - ./data/db:/data/db
+    command: --noscripting
+```
+
+#### Environment variables
+
+- **Basic Settings**
+  - `DB_HOST`
+    - Hostname of mongodb server.
+    - default: `localhost`
+  - `DB_PORT`
+    - Listening port of mongodb server.
+    - default: `27017`
+  - `SERVER_HOST`
+    - Hostname of jsondb server.
+    - default: `localhost`
+  - `SERVER_PORT`
+    - Listening port of jsondb server.
+    - default: `8000`
+  - `TRUST_PROXY`
+    - Wheather to trust headers from reverse proxy.
+    - Set this to `true` if the jsondb server is behind a reverse proxy server (ex. Nginx, LoadBalancer).
+    - default: `false`
+  - `AES_PASSWORD`
+    - Internally used password for AES encryption.
+    - **Do not leave this as default value in any public environment.**
+    - default: `password`
+  - `AES_SALT`
+    - Internally used salt for AES encryption.
+    - **Do not leave this as default value in any public environment.**
+    - default: `salt`
+  - `ENABLE_CORS`
+    - Wheather to enable headers for Cross Origin Resource Sharing.
+    - Set this to `true` if jsondb server will communicate with web-browser based applications
+    - default: `false`
+  - `CORS_ORIGIN`
+    - Accepted origins for CORS. Can be specified multiple values with comma separated format.
+    - Set this to `*` to accept any origins.
+    - example: `*` `example.com,app.example.com`
+    - default: `*`
+
+- **Logging**
+  - `ENABLE_LOGGER`
+    - Wheather to output access logs into stdout.
+    - default: `false`
+  - `LOGGER_LEVEL`
+    - Log level.
+    - default: `info`
+  - `LOGGER_PRETTY_PRINT`
+    - Wheather to enable pretty print option for logger.
+    - default: `false`
+
+- **Limitation**
+  - `MAX_BODY_SIZE_KB`
+    - Maximum size of each request body in KB.
+    - default: `50`
+  - `MAX_PARAM_LENGTH`
+    - Maximum length of characters for path parameters such as database names and collection names.
+    - default: `128`
+  - `MAX_STRING_LENGTH`
+    - Maximum length of characters for `string` type field value in each document.
+    - default: `4096`
+  - `MAX_ARRAY_LENGTH`
+    - Maximum length for `array` type field value in each document.
+    - default: `1024`
+  - `MIN_AUTH_ID_LENGTH`
+    - Minimum length of characters for `id` field value in `auth` collection.
+    - default: `8`
+  - `MAX_AUTH_ID_LENGTH`
+    - Maximum length of characters for `id` field value in `auth` collection.
+    - default: `1024`
+  - `MIN_AUTH_PASSWORD_LENGTH`
+    - Minimum length of characters for `password` field value in `auth` collection.
+    - default: `8`
+  - `MAX_AUTH_PASSWORD_LENGTH`
+    - Maximum length of characters for `password` field value in `auth` collection.
+    - default: `1024`
+  - `MIN_API_KEY_LENGTH`
+    - Minimum length of characters for `x-api-key` value in request headers.
+    - default: `8`
+  - `MAX_API_KEY_LENGTH`
+    - Maximum length of characters for `x-api-key` value in request headers.
+    - default: `1024`
+  - `MAX_BULK_CREATION_LENGTH`
+    - Maximum number of items for bulk creation at one time.
+    - default: `100`
+  - `MAX_QUERY_EXECUTION_SEC`
+    - Maximum time for waiting query execution in seconds.
+    - default: `10`

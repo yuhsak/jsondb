@@ -4,6 +4,7 @@ import { getCollection } from './client'
 import type { Collection } from '../schema'
 import { serialize, createQuery } from '../util'
 import { ensureApiKey } from './system'
+import { MAX_QUERY_EXECUTION_SEC } from '../config'
 
 const findOneBy =
   <Key extends string, V>(resolver: (query: Record<Key, V>) => Record<string, any>) =>
@@ -45,7 +46,7 @@ export const findByQuery =
       cursor = cursor.sort(sort)
     }
     cursor = cursor.skip(limit * skip).limit(limit)
-    return cursor.maxTimeMS(1000 * 10).toArray()
+    return cursor.maxTimeMS(1000 * MAX_QUERY_EXECUTION_SEC).toArray()
   }
 
 export const findAndSerializeByQuery = (db: Collection) => {
