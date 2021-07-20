@@ -22,7 +22,9 @@ To keep in focus on learning things of frontend developping, it's better to work
 
 `https://jsondb.app`
 
-### GET /:db/:collection
+### Get list of documents
+
+`GET /:db/:collection`
 
 List all documents stored in collection.
 
@@ -54,9 +56,11 @@ GET https://jsondb.app/db-c07f2fd8fe73045a/items
 }
 ```
 
-### POST /:db/:collection
+### Create single document
 
-Create new document.
+`POST /:db/:collection`
+
+Create a new document.
 
 #### Request
 
@@ -84,9 +88,11 @@ Body: {
 }
 ```
 
-### GET /:db/:collection/:id
+### Get single document
 
-Get document with specific id.
+`GET /:db/:collection/:id`
+
+Get single document with specific id.
 
 Returns 404 if given id doesn't exist.
 
@@ -112,11 +118,13 @@ GET https://jsondb.app/db-c07f2fd8fe73045a/items/551f225bb77ea84b91a1bfaa
 }
 ```
 
-### PUT /:db/:collection/:id
+### Create or replace single document
+
+`PUT /:db/:collection/:id`
 
 Create or replace document with specific id.
 
-A new document will be created if the given id not exist, otherwise existing document will be replaced by provided body.
+A new document will be created if the given id doesn't exist, otherwise existing document will be replaced by provided body.
 
 `:id` must be 24 length of lowercase alphanumeric characters.
 
@@ -146,11 +154,13 @@ Body: {
 }
 ```
 
-### PATCH /:db/:collection/:id
+### Create or merge single document
 
-Create or patch document with specific id.
+`PATCH /:db/:collection/:id`
 
-A new document will be created if the given id not exist, otherwise existing document will be merged with provided body.
+Create or merge document with specific id.
+
+A new document will be created if the given id doesn't exist, otherwise existing document will be merged with provided body.
 
 `:id` must be 24 length of lowercase alphanumeric characters.
 
@@ -180,7 +190,9 @@ Body: {
 }
 ```
 
-### DELETE /:db/:collection/:id
+### Delete single document
+
+`DELETE /:db/:collection/:id`
 
 Delete document with specific id.
 
@@ -226,7 +238,7 @@ For advanced filtering, some of the operators from MongoDB are supported.
 - $all
 - $in
 
-Filter documents which has "name" not equals to "sample-document"
+Filter documents whose "name" is not equals to "sample-document"
 
 ```
 GET https://jsondb.app/db-c07f2fd8fe73045a/items?query={"name":{"$ne":"sample-document"}}
@@ -250,7 +262,7 @@ Filter documents which has "category" to be one of ["game", "entertainment"]
 GET https://jsondb.app/db-c07f2fd8fe73045a/items?query={"category":{"$in":["game","entertainment"]}}
 ```
 
-Filter documents which has "categories" to be included all of ["game", "entertainment"]
+Filter documents which has an array field "categories" including all of ["game", "entertainment"]
 
 ```
 GET https://jsondb.app/db-c07f2fd8fe73045a/items?query={"categories":{"$all":["game","entertainment"]}}
