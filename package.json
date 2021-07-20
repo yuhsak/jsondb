@@ -1,7 +1,16 @@
 {
-  "name": "json-db",
-  "version": "0.0.1",
-  "description": "",
+  "name": "jsondb",
+  "version": "0.1.0",
+  "description": "Simple, easy, out-of-the-box HTTP based JSON store designed for tiny applications.",
+  "author": {
+    "name": "Yuhsak Inoue",
+    "email": "yuhsak.inoue@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Yuhsak/jsondb.git"
+  },
+  "license": "MIT",
   "main": "index.js",
   "scripts": {
     "test": "tap --ts --no-coverage",
@@ -16,8 +25,6 @@
     "check:type": "tsc --noEmit",
     "check": "run-s check:type check:format"
   },
-  "author": "",
-  "license": "MIT",
   "devDependencies": {
     "@types/node": "^16.3.2",
     "@types/node-cron": "^2.0.4",
