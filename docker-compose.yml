@@ -1,7 +1,9 @@
 version: '3.1'
 services:
   api:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
     ports:
       - 8000:8000
     environment:
@@ -15,7 +17,6 @@ services:
       LOGGER_PRETTY_PRINT: 'true'
     volumes:
       - .:/app
-    command: npm run dev
   db:
     image: mongo:5.0.0
     expose:

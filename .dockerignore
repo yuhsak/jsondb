@@ -10,5 +10,6 @@ docker-compose.*.yml
 
 .gitignore
 docker-compose.yml
-Dockerfile
 /.vscode
+LICENSE
+README.md
