@@ -3,7 +3,7 @@ import type { Document } from 'mongodb'
 import { getCollection } from './client'
 import type { Collection } from '../schema'
 import { serialize, createQuery } from '../util'
-import { ensureApiKey } from './system'
+import { ensureApiKey } from './config'
 import { MAX_QUERY_EXECUTION_SEC } from '../config'
 
 const findOneBy =

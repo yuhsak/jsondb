@@ -2,7 +2,7 @@ import { ObjectId } from 'mongodb'
 import { getCollection } from './client'
 import type { Collection } from '../schema'
 import { findOneById } from './find'
-import { ensureApiKey } from './system'
+import { ensureApiKey } from './config'
 import { createQuery } from '../util'
 
 export const deleteOneById =

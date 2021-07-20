@@ -1,6 +1,6 @@
 {
   "name": "jsondb",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Simple, easy, out-of-the-box HTTP based JSON store designed for tiny applications.",
   "author": {
     "name": "Yuhsak Inoue",
@@ -39,6 +39,7 @@
   },
   "dependencies": {
     "@sinclair/typebox": "^0.17.7",
+    "aws4": "^1.11.0",
     "fastify": "^3.19.1",
     "fastify-cors": "^6.0.2",
     "fastify-plugin": "^3.0.0",

@@ -9,7 +9,7 @@ export type DB = Static<typeof DB>
 export const Collection = Type.Intersect([
   DB,
   Type.Object({
-    collection: Type.String({ pattern: '^[-a-zA-Z0-9_.]+$' }),
+    collection: Type.String({ pattern: '^(?!\\.)(?!.*\\.$)[-a-zA-Z0-9_.]+$' }),
   }),
 ])
 

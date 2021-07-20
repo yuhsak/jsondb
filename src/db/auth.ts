@@ -4,7 +4,7 @@ import { createCipher, generateId } from '../util'
 import { AES_PASSWORD, AES_SALT } from '../config'
 import { findOneByToken, findOneByDataId } from './find'
 import { insertOne } from './insert'
-import { ensureApiKey } from './system'
+import { ensureApiKey } from './config'
 
 const { encrypt } = createCipher(AES_PASSWORD, AES_SALT)
 

@@ -4,7 +4,7 @@ import { getCollection } from './client'
 import type { Collection } from '../schema'
 import { serialize, omitMeta, splitMeta, decorateKeyForData } from '../util'
 import { findOneById } from './find'
-import { ensureApiKey } from './system'
+import { ensureApiKey } from './config'
 
 const ensureIndex = async (collection: MongoCollection<Document>) => {
   try {
