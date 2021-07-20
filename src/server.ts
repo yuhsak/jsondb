@@ -6,23 +6,37 @@ import { disconnect } from './db/client'
 
 export type BuildOption = {
   trustProxy?: boolean
-  logger?: boolean
   bodyLimit?: number
   maxParamLength?: number
-  enableCors?: boolean | string[]
+  enableCors?: boolean
+  corsOrigin?: string[]
+  enableLogger?: boolean
+  loggerLevel?: string
+  loggerPrettyPrint?: boolean
 }
 
-export const build = ({ trustProxy = false, logger = false, bodyLimit = 50000, maxParamLength = 128, enableCors = false }: BuildOption = {}) => {
+export const build = ({
+  trustProxy = false,
+  bodyLimit = 50000,
+  maxParamLength = 128,
+  enableCors = false,
+  corsOrigin = ['*'],
+  enableLogger = false,
+  loggerLevel = 'info',
+  loggerPrettyPrint = false,
+}: BuildOption = {}) => {
   const server = fastify({
     ignoreTrailingSlash: true,
     keepAliveTimeout: 10000,
     trustProxy,
     maxParamLength,
     bodyLimit,
-    logger: logger && {
-      level: 'info',
-      prettyPrint: true,
-    },
+    logger: enableLogger
+      ? {
+          level: loggerLevel,
+          prettyPrint: loggerPrettyPrint,
+        }
+      : false,
   })
 
   const compiler = (coerceTypes: boolean) =>
@@ -46,7 +60,7 @@ export const build = ({ trustProxy = false, logger = false, bodyLimit = 50000, m
 
   if (enableCors) {
     server.register(cors, {
-      origin: enableCors,
+      origin: corsOrigin.some((origin) => ['*'].includes(origin)) || corsOrigin,
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     })
   }

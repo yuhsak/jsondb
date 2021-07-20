@@ -1,5 +1,6 @@
 import { connect } from '../db/client'
-import { EXCLUDE_DB_FROM_CLEANER } from '../config'
+import { CLEANUP_EXCLUDE_DB, CLEANUP_THRESHOLD } from '../config'
+import { prohibitedDbs, prohibitedCollections } from '../hooks'
 
 const getAllCollections = async () => {
   const client = await connect()
@@ -7,10 +8,10 @@ const getAllCollections = async () => {
   const arr: { db: string; collection: string }[] = []
   // @ts-ignore
   const { databases } = await admin.listDatabases()
-  for (const db of databases.filter((db: any) => !['admin', 'local', 'config', 'system', 'meta', ...EXCLUDE_DB_FROM_CLEANER].includes(db.name)).map((db: any) => db.name)) {
+  for (const db of databases.filter((db: any) => ![...prohibitedDbs, ...CLEANUP_EXCLUDE_DB].includes(db.name)).map((db: any) => db.name)) {
     if (typeof db === 'string') {
       const collections = await client.db(db).listCollections().toArray()
-      for (const collection of collections.filter((c: any) => !['config', 'system', 'meta'].includes(c.name)).map((c: any) => c.name)) {
+      for (const collection of collections.filter((c: any) => ![...prohibitedCollections.filter((c) => c !== 'auth')].includes(c.name)).map((c: any) => c.name)) {
         if (typeof collection === 'string') {
           arr.push({ db, collection })
         }
@@ -24,7 +25,7 @@ export const clean = async () => {
   const client = await connect()
   const collections = await getAllCollections()
   const now = new Date().getTime()
-  const period = now - 1000 * 60 * 60 * 24 * 30
+  const period = now - CLEANUP_THRESHOLD
   for (const dist of collections) {
     const collection = client.db(dist.db).collection(dist.collection)
     let targets = [...Array(100)].fill(0)

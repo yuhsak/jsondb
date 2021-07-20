@@ -1,12 +1,12 @@
 import type { FastifyPluginAsync } from 'fastify'
 import { Collection } from '../schema'
 
-export const invalidCollections = ['config', 'system', 'auth', 'token', 'meta', 'hook']
+export const prohibitedCollections = ['config', 'system', 'auth', 'permission', 'account', 'credential', 'token', 'meta', 'info', 'hook'].flatMap((c) => [c, c + 's'])
 
 export const validateCollection: FastifyPluginAsync = async (fastify, opt) => {
   fastify.addHook<{ Params: Collection }>('onRequest', async (req, reply) => {
     const { collection } = req.params
-    if (invalidCollections.includes(collection.toLowerCase())) {
+    if (prohibitedCollections.includes(collection.toLowerCase())) {
       reply.code(404)
       throw new Error('CollectionNotFound')
     }

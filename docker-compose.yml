@@ -9,10 +9,9 @@ services:
       - DB_PORT=27017
       - SERVER_HOST=0.0.0.0
       - SERVER_PORT=8000
-      - AES_PASSWORD=__password__
-      - AES_SALT=__salt__
       - ENABLE_CORS=true
-      - LOGGER=true
+      - ENABLE_LOGGER=true
+      - LOGGER_PRETTY_PRINT=true
     volumes:
       - .:/app
     command: npm run dev
