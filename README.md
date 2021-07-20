@@ -244,7 +244,7 @@ Filter documents whose `name` is not equals to `sample-document`
 GET https://jsondb.app/db-c07f2fd8fe73045a/items?query={"name":{"$ne":"sample-document"}}
 ```
 
-Filter documents which has `\_createdAt` to be less than 1600000000000
+Filter documents which has `_createdAt` to be less than 1600000000000
 
 ```
 GET https://jsondb.app/db-c07f2fd8fe73045a/items?query={"_createdAt":{"$lt":1600000000000}}
