@@ -1,8 +1,6 @@
 import tap from 'tap'
-import { build } from '../../src/server'
+import { server } from '../server'
 import { generateId } from '../../src/util'
-
-const server = build()
 
 const db1 = `protected-db-${generateId(32)}`
 const db2 = `protected-db-${generateId(32)}`
@@ -28,7 +26,7 @@ tap.before(async () => {
     method: 'POST',
     path: _protected.collection,
     payload: { test: true },
-    headers: { 'x-api-key': 'test' },
+    headers: { 'x-api-key': 'test1234' },
   })
   await server.inject({
     method: 'POST',
@@ -120,6 +118,7 @@ tap.test('protected-db', async (test) => {
     await server.inject({
       method: 'POST',
       path: _public.collection,
+      headers: { 'x-api-key': 'test1234' },
       payload: { test: true },
     })
     const res2 = await server.inject({

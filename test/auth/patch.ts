@@ -1,8 +1,6 @@
 import tap from 'tap'
-import { build } from '../../src/server'
+import { server } from '../server'
 import { generateId } from '../../src/util'
-
-const server = build()
 
 const db = `auth-patch-${generateId(32)}`
 const path = `/${db}/auth`
@@ -16,13 +14,13 @@ tap.before(async () => {
     method: 'PATCH',
     path,
     headers: { authorization: 'Bearer test1' },
-    payload: { id: 'test1', password: 'test1' },
+    payload: { id: 'test1234', password: 'test1234' },
   })
   await server.inject({
     method: 'PATCH',
     path,
     headers: { authorization: 'Bearer test2' },
-    payload: { id: 'test2', password: 'test2' },
+    payload: { id: 'test2345', password: 'test2345' },
   })
 })
 
@@ -43,7 +41,7 @@ tap.test('PATCH /:db/auth', async (test) => {
     const res = await server.inject({
       method: 'PATCH',
       path,
-      payload: { id: 'test1' },
+      payload: { id: 'test1234' },
       headers: { authorization: 'Bearer test1' },
     })
     t.equal(res.statusCode, 200)
@@ -55,7 +53,7 @@ tap.test('PATCH /:db/auth', async (test) => {
     const res = await server.inject({
       method: 'PATCH',
       path,
-      payload: { password: 'test1' },
+      payload: { password: 'test1234' },
       headers: { authorization: 'Bearer test1' },
     })
     t.equal(res.statusCode, 200)
@@ -79,7 +77,7 @@ tap.test('PATCH /:db/auth', async (test) => {
     const res = await server.inject({
       method: 'PATCH',
       path,
-      payload: { password: 'test' },
+      payload: { password: 'test1234' },
       headers: { authorization: 'Bearer not-exist-2' },
     })
     t.equal(res.statusCode, 400)
@@ -91,7 +89,7 @@ tap.test('PATCH /:db/auth', async (test) => {
     const res = await server.inject({
       method: 'PATCH',
       path,
-      payload: { id: 'test' },
+      payload: { id: 'test1234' },
       headers: { authorization: 'Bearer not-exist-3' },
     })
     t.equal(res.statusCode, 400)
@@ -103,7 +101,7 @@ tap.test('PATCH /:db/auth', async (test) => {
     const res = await server.inject({
       method: 'PATCH',
       path,
-      payload: { id: 'test1', password: 'test1' },
+      payload: { id: 'test1234', password: 'test1234' },
       headers: { authorization: 'Bearer not-exist-4' },
     })
     t.equal(res.statusCode, 400)
@@ -115,7 +113,7 @@ tap.test('PATCH /:db/auth', async (test) => {
     const res = await server.inject({
       method: 'PATCH',
       path,
-      payload: { id: 'test1' },
+      payload: { id: 'test1234' },
       headers: { authorization: 'Bearer test2' },
     })
     t.equal(res.statusCode, 400)

@@ -1,9 +1,7 @@
 import tap from 'tap'
-import { build } from '../../src/server'
+import { server } from '../server'
 
 tap.test('POST /:db/:collection', async (test) => {
-  const server = build()
-
   test.teardown(() => {
     server.close()
   })

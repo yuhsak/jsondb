@@ -1,8 +1,6 @@
 import tap from 'tap'
-import { build } from '../../src/server'
+import { server } from '../server'
 import { generateId } from '../../src/util'
-
-const server = build()
 
 const db = `document-get-${generateId(32)}`
 const id = `ffffffffffffffffffffffff`

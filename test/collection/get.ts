@@ -1,8 +1,6 @@
 import tap from 'tap'
-import { build } from '../../src/server'
+import { server } from '../server'
 import { generateId } from '../../src/util'
-
-const server = build()
 
 const db = `collection-get-${generateId(32)}`
 const path = `/${db}/collection`
@@ -74,7 +72,7 @@ tap.test('GET /:db/:collection', async (test) => {
     t.equal(body.statusCode, 200)
     t.strictSame(
       body.data.map((item: any) => item.order),
-      [1, 2, 3, 4, 5]
+      [1, 2, 3, 4, 5],
     )
   })
 
@@ -88,7 +86,7 @@ tap.test('GET /:db/:collection', async (test) => {
     t.equal(body.statusCode, 200)
     t.strictSame(
       body.data.map((item: any) => item.order),
-      [5, 4, 3, 2, 1]
+      [5, 4, 3, 2, 1],
     )
   })
 
@@ -102,7 +100,7 @@ tap.test('GET /:db/:collection', async (test) => {
     t.equal(body.statusCode, 200)
     t.strictSame(
       body.data.map((item: any) => item.flag),
-      [true, true]
+      [true, true],
     )
   })
 
@@ -127,7 +125,7 @@ tap.test('GET /:db/:collection', async (test) => {
     t.equal(body.statusCode, 200)
     t.strictSame(
       body.data.map((item: any) => item.flag),
-      [false, true]
+      [false, true],
     )
   })
 
@@ -182,7 +180,7 @@ tap.test('GET /:db/:collection', async (test) => {
     const body = JSON.parse(res.body)
     t.strictSame(
       body.data.map((item: any) => item.order),
-      [1, 3, 2, 4, 5]
+      [1, 3, 2, 4, 5],
     )
   })
 })

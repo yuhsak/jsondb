@@ -1,12 +1,10 @@
 import tap from 'tap'
-import { build } from '../../src/server'
+import { server } from '../server'
 import { generateId } from '../../src/util'
 
 const id = generateId(24)
 
 tap.test('PATCH with token /:db/:collection', async (test) => {
-  const server = build()
-
   test.teardown(() => {
     server.close()
   })
