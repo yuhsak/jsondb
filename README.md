@@ -20,7 +20,7 @@ To keep in focus on learning things of frontend developping, it's better to work
 
 ### Base URL
 
-`https://jsondb.app`
+[`https://jsondb.app`](https://jsondb.app)
 
 ### Get list of documents
 
@@ -229,40 +229,40 @@ GET https://jsondb.app/db-c07f2fd8fe73045a/items?query={"name":"sample-document"
 
 For advanced filtering, some of the operators from MongoDB are supported.
 
-- $ne
-- $exists
-- $lt
-- $lte
-- $gt
-- $gte
-- $all
-- $in
+- `$ne`
+- `$exists`
+- `$lt`
+- `$lte`
+- `$gt`
+- `$gte`
+- `$all`
+- `$in`
 
-Filter documents whose "name" is not equals to "sample-document"
+Filter documents whose `name` is not equals to `sample-document`
 
 ```
 GET https://jsondb.app/db-c07f2fd8fe73045a/items?query={"name":{"$ne":"sample-document"}}
 ```
 
-Filter documents which has "\_createdAt" to be less than 1600000000000
+Filter documents which has `\_createdAt` to be less than 1600000000000
 
 ```
 GET https://jsondb.app/db-c07f2fd8fe73045a/items?query={"_createdAt":{"$lt":1600000000000}}
 ```
 
-Filter documents which doesn't have "name" field
+Filter documents which doesn't have `name` field
 
 ```
 GET https://jsondb.app/db-c07f2fd8fe73045a/items?query={"name":{"$exists":false}}
 ```
 
-Filter documents which has "category" to be one of ["game", "entertainment"]
+Filter documents which has `category` to be one of [`game`, `entertainment`]
 
 ```
 GET https://jsondb.app/db-c07f2fd8fe73045a/items?query={"category":{"$in":["game","entertainment"]}}
 ```
 
-Filter documents which has an array field "categories" including all of ["game", "entertainment"]
+Filter documents which has an array field `categories` including all of [`game`, `entertainment`]
 
 ```
 GET https://jsondb.app/db-c07f2fd8fe73045a/items?query={"categories":{"$all":["game","entertainment"]}}
@@ -296,7 +296,7 @@ Pagination can be controlled with `limit` and `skip` parameters specified as que
 GET https://jsondb.app/db-c07f2fd8fe73045a/items?limit=10&skip=2
 ```
 
-### Bulk create
+### Bulk creation
 
 To create multiple documents at once, simply post an array of objects.
 
@@ -321,7 +321,7 @@ To make document private, `Authorization` header can be specified with bearer to
 
 Private document can't be modified and deleted without the token which was specified when the document is created.
 
-For example, "Authorization" header with "Bearer test-token" must be always specified to make any modification to this document below.
+For example, `Authorization` header with `Bearer test-token` must be always specified to make any modification to this document below.
 
 **Create a private document**
 
@@ -338,7 +338,7 @@ Body: {
 
 When token is specified in header, `GET /:db/:collection` will return the documents only with specific token.
 
-**Get private documents**
+**Get list of private documents**
 
 ```
 GET https://jsondb.app/db-c07f2fd8fe73045a/items
@@ -347,7 +347,7 @@ Headers: {
 }
 ```
 
-To prevent this behavior, "mode" parameter can be set in querystring.
+To prevent this behavior, `mode` parameter can be set in querystring.
 
 **Get all documents**
 
@@ -358,7 +358,7 @@ Headers: {
 }
 ```
 
-### Bulk delete
+### Bulk deletion by query
 
 To delete all of private documents, `DELETE /:db/:collection` can be requested with token.
 
@@ -382,7 +382,7 @@ Headers: {
 }
 ```
 
-This bulk delete operation also can be filtered like `GET`.
+This bulk delete operation also can be filtered like `GET` operation.
 
 **Delete all of private documents which has "name" to be "sample"**
 
@@ -397,7 +397,7 @@ Headers: {
 
 Every database has a special collection named `auth` in which pairs of id and password can be stored.
 
-It's a toy function and too weak to use as real authentication, but actually useful for prototyping/learning to create user based apps.
+It's a toy function which is too weak to use as real authentication, but actually useful for prototyping or learning how to create user based apps.
 
 **(Don't use this to store sensitive user information, especially related to real payment or something.)**
 
@@ -405,9 +405,11 @@ It's a toy function and too weak to use as real authentication, but actually use
 
 To create a record, make PUT request to the collection with id and password.
 
+The id and password must be at least 8 characters.
+
 > `password` will be encryted automatically before save.
 
-Then a response with `token` will be returned. This `token` can be used for `Authorization` header.
+Then a response with `token` will be returned. This `token` can be used with `Authorization` header.
 
 If same id and password are specified, always same token will be returned.
 
@@ -416,8 +418,8 @@ If same id and password are specified, always same token will be returned.
 ```
 PUT https://jsondb.app/db-c07f2fd8fe73045a/auth
 Body: {
-  "id": "test",
-  "password": "test"
+  "id": "test1234",
+  "password": "test1234"
 }
 ```
 
@@ -439,8 +441,8 @@ If a invalid password is specified, response with status 401 will be returned.
 ```
 PUT https://jsondb.app/db-c07f2fd8fe73045a/auth
 Body: {
-  "id": "test",
-  "password": "test-invalid"
+  "id": "test1234",
+  "password": "invalid-password"
 }
 ```
 
@@ -468,7 +470,7 @@ Headers: {
   "Authorization": "Bearer 952d738da7ae6b155b0302ded591123c"
 }
 Body: {
-  "password": "changed"
+  "password": "changed-password"
 }
 ```
 
@@ -493,8 +495,8 @@ Headers: {
   "Authorization": "Bearer test-token"
 }
 Body: {
-  "id": "new-id",
-  "password": "new-password"
+  "id": "newly-created-id",
+  "password": "newly-created-password"
 }
 ```
 
@@ -515,6 +517,8 @@ To make database protected, `x-api-key` header can be specified when a very firs
 
 Protected database can't be accessed without this `x-api-key`, even for "GET" request.
 
+The `x-api-key` must have at least 8 characters of length.
+
 ```
 POST https://jsondb.app/db-c07f2fd8fe73045a/items
 Headers: {
@@ -526,9 +530,9 @@ Body: {
 }
 ```
 
-Making db protected with `x-api-key` works only for first time document creation.
+Making db protected with `x-api-key` works only for first time of document creation for each db.
 
-That means when any document has already been created without `x-api-key` in a db, then this db never can be turned into a protected one.
+This means that when any document has already been created without `x-api-key` into a db, then this db never can be turned into a protected one.
 
 ### Limitation
 
