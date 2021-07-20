@@ -12,7 +12,9 @@
     "watch": "tsc --watch",
     "nodemon": "nodemon --watch dist dist/app.js",
     "dev": "npm-run-all build --parallel watch nodemon",
-    "format": "prettier --check src/**/*.ts"
+    "check:format": "prettier --check src/**/*.ts",
+    "check:type": "tsc --noEmit",
+    "check": "run-s check:type check:format"
   },
   "author": "",
   "license": "MIT",
