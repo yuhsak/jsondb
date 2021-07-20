@@ -1,6 +1,6 @@
 {
   "name": "jsondb",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Simple, easy, out-of-the-box HTTP based JSON store designed for tiny applications.",
   "author": {
     "name": "Yuhsak Inoue",

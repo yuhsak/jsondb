@@ -5,13 +5,14 @@ services:
     ports:
       - 8000:8000
     environment:
-      - DB_HOST=db
-      - DB_PORT=27017
-      - SERVER_HOST=0.0.0.0
-      - SERVER_PORT=8000
-      - ENABLE_CORS=true
-      - ENABLE_LOGGER=true
-      - LOGGER_PRETTY_PRINT=true
+      DB_HOST: db
+      DB_PORT: 27017
+      SERVER_HOST: 0.0.0.0
+      SERVER_PORT: 8000
+      ENABLE_CORS: 'true'
+      CORS_ORIGIN: '*'
+      ENABLE_LOGGER: 'true'
+      LOGGER_PRETTY_PRINT: 'true'
     volumes:
       - .:/app
     command: npm run dev

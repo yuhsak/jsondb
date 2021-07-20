@@ -573,17 +573,17 @@ services:
     ports:
       - 8000:8000
     environment:
-      - DB_HOST=db
-      - DB_PORT=27017
-      - SERVER_HOST=0.0.0.0
-      - SERVER_PORT=8000
-      - ENABLE_CORS=true
-      - CORS_ORIGIN=*
-      - ENABLE_LOGGER=true
-      - LOGGER_LEVEL=info
-      - LOGGER_PRETTY_PRINT=true
-      - AES_PASSWORD=your-aes-password
-      - AES_SALT=your-aes-salt
+      DB_HOST: db
+      DB_PORT: 27017
+      SERVER_HOST: 0.0.0.0
+      SERVER_PORT: 8000
+      ENABLE_CORS: 'true'
+      CORS_ORIGIN: '*'
+      ENABLE_LOGGER: 'true'
+      LOGGER_LEVEL: info
+      LOGGER_PRETTY_PRINT: 'true'
+      AES_PASSWORD: your-aes-password
+      AES_SALT: your-aes-salt
   db:
     image: mongo:5.0.0
     expose:
@@ -595,14 +595,51 @@ services:
 
 ### Environment variables
 
-#### Basic Settings
+#### DB Connection
 
+- `DB_PROTOCOL`
+  - Protocol to communicate with mongodb server.
+  - Set this to `mongodb+srv` if the hostname following it corresponds to the DNS SRV record of your instance or deployment.
+  - default: `mongodb`
 - `DB_HOST`
   - Hostname of mongodb server.
   - default: `localhost`
 - `DB_PORT`
   - Listening port of mongodb server.
   - default: `27017`
+- `DB_USERNAME`
+  - Username for authentication. Will be automatically encoded through `encodeURIComponent()`.
+  - Specify only if your mongodb server requires user based authentication, otherwise just leave it unset.
+  - Colud be specified with `AWS_ACCESS_KEY_ID` if `DB_AUTH_MECHANISM` is set to be `MONGODB-AWS`.
+  - default: `undefined`
+- `DB_PASSWORD`
+  - Password for authentication. Will be automatically encoded through `encodeURIComponent()`.
+  - Specify only if needed, otherwise just leave it unset.
+  - Colud be specified with `AWS_SECRET_ACCESS_KEY` if `DB_AUTH_MECHANISM` is set to be `MONGODB-AWS`.
+  - default: `undefined`
+- `DB_AUTH_MECHANISM`
+  - The `authMechanism` config.
+  - Example
+    - `DEFAULT`
+    - `SCRAM-SHA-256`
+    - `SCRAM-SHA-1`
+    - `MONGODB-AWS`
+    - `MONGODB-X509`
+  - default: `DEFAULT`
+- `DB_CONNECTION_QUERY`
+  - Additional connection config as a querystring.
+  - TLS related configs also can be specified with this variable.
+  - Examples
+    - `tls=true&tlsCertificateKeyFile=tls-key.cer`
+    - `poolSize=20&writeConcern=majority`
+    - `connectTimeoutMS=20000&socketTimeoutMS=720000`
+  - default: `undefined`
+- `AWS_SESSION_TOKEN`
+  - Effects only if `DB_AUTH_MECHANISM` is set to `MONGODB-AWS` and your aws requires a session token.
+  - default: `undefined`
+
+#### HTTP Server
+
 - `SERVER_HOST`
   - Hostname of jsondb server.
   - default: `localhost`

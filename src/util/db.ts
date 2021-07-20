@@ -1,10 +1,23 @@
 import type { Document } from 'mongodb'
 
-export const isValidObjectId = (id: string) => /[a-z0-9]*/.test(id) && id.length === 24
-
-export const serialize = (data: Document): Document => {
-  return { ...data.data, _id: data._id, _createdAt: data._createdAt, _updatedAt: data._updatedAt }
+export type BuildUriParam = {
+  protocol: string
+  host: string
+  port: number
+  authMechanism?: string
+  username?: string
+  password?: string
+  connectionQuery?: string
 }
+
+export const buildUri = ({ protocol, host, port, authMechanism, username, password, connectionQuery }: BuildUriParam) => {
+  const auth = username && password ? `${encodeURIComponent(username)}:${encodeURIComponent(password)}@` : username ? `${encodeURIComponent(username)}@` : ''
+  const url = `${host}:${port}`
+  const query = [authMechanism && `authMechanism=${authMechanism}`, connectionQuery].filter((item): item is string => !!item).join('&')
+  return `${protocol}://${auth}${url}${query ? `/?${query}` : ''}`
+}
+
+export const isValidObjectId = (id: string) => /[a-z0-9]*/.test(id) && id.length === 24
 
 export const splitMeta = (input: any) => {
   const { _createdAt, _updatedAt, _id, _token, ...data } = input
@@ -19,11 +32,16 @@ export const splitMeta = (input: any) => {
   }
 }
 
-export const deserialize = (input: any) => splitMeta(input).data
-
 export const omitToken = (input: any) => {
   const { _token, ...rest } = input
   return rest
+}
+
+export const omitMeta = (input: any) => splitMeta(input).data
+
+export const serialize = (data: Document): Document => {
+  const d = splitMeta(data)
+  return { ...d.data.data, ...omitToken(d.meta) }
 }
 
 export const decorateKeyForData = (input: any) => Object.fromEntries(Object.entries(input).map(([k, v]) => [`data.${k}`, v]))

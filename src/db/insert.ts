@@ -1,8 +1,8 @@
 import { ObjectId } from 'mongodb'
 import type { Collection as MongoCollection, Document } from 'mongodb'
 import { getCollection } from './client'
-import type { DB, Collection } from '../schema'
-import { serialize, deserialize, splitMeta, decorateKeyForData } from '../util'
+import type { Collection } from '../schema'
+import { serialize, omitMeta, splitMeta, decorateKeyForData } from '../util'
 import { findOneById } from './find'
 import { ensureApiKey } from './system'
 
@@ -22,7 +22,7 @@ export const insertOne =
   async ({ data: _data, token: _token, apiKey }: { data: any; token?: string; apiKey?: string }) => {
     const collection = await getCollection(db)
     const now = new Date().getTime()
-    const data = { data: deserialize(_data), _createdAt: now, _updatedAt: now, ...(_token ? { _token } : {}) }
+    const data = { data: omitMeta(_data), _createdAt: now, _updatedAt: now, ...(_token ? { _token } : {}) }
     await ensureApiKey(db)({ apiKey })
     const { insertedId: _id } = await collection.insertOne(data)
     ensureIndex(collection)
@@ -44,7 +44,7 @@ export const upsertOneById = (db: Collection) => {
     const filter = { _id: new ObjectId(id) }
     const data = {
       ...filter,
-      data: deserialize(_data),
+      data: omitMeta(_data),
       _createdAt: now,
       _updatedAt: now,
       ...(_token ? { _token } : {}),

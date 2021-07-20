@@ -1,8 +1,13 @@
 import { asInt } from './util'
 
 /** DB */
+export const DB_PROTOCOL = process.env.DB_PROTOCOL || 'mongodb'
 export const DB_HOST = process.env.DB_HOST || 'localhost'
 export const DB_PORT = asInt(process.env.DB_PORT) ?? 27017
+export const DB_USERNAME = process.env.DB_USERNAME
+export const DB_PASSWORD = process.env.DB_PASSWORD
+export const DB_AUTH_MECHANISM = process.env.DB_AUTH_MECHANISM
+export const DB_CONNECTION_QUERY = process.env.DB_CONNECTION_QUERY
 
 /** HTTP Server */
 export const SERVER_HOST = process.env.SERVER_HOST || 'localhost'
