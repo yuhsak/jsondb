@@ -389,6 +389,8 @@ It's a toy function and too weak to use as real authentication, but actually use
 
 **(Don't use this to store sensitive user information, especially related to real payment or something.)**
 
+#### Create or authorize account
+
 To create a record, make PUT request to the collection with id and password.
 
 > `password` will be encryted automatically before save.
@@ -397,7 +399,7 @@ Then a response with `token` will be returned. This `token` can be used for `Aut
 
 If same id and password are specified, always same token will be returned.
 
-#### Request
+##### Request
 
 ```
 PUT https://jsondb.app/db-c07f2fd8fe73045a/auth
@@ -407,7 +409,7 @@ Body: {
 }
 ```
 
-#### Response
+##### Response
 
 ```json
 {
@@ -420,7 +422,7 @@ Body: {
 
 If a invalid password is specified, response with status 401 will be returned.
 
-#### Request
+##### Request
 
 ```
 PUT https://jsondb.app/db-c07f2fd8fe73045a/auth
@@ -430,7 +432,7 @@ Body: {
 }
 ```
 
-#### Response
+##### Response
 
 ```json
 {
@@ -440,11 +442,13 @@ Body: {
 }
 ```
 
+#### Update id, password or create new account based on auth token
+
 To update id, password or create new record based on Authorization token, make PATCH request with payload.
 
 **Update password for id "test"**
 
-#### Request
+##### Request
 
 ```
 PATCH https://jsondb.app/db-c07f2fd8fe73045a/auth
@@ -456,7 +460,7 @@ Body: {
 }
 ```
 
-#### Response
+##### Response
 
 ```json
 {
@@ -469,7 +473,7 @@ Body: {
 
 **Create new record with token "test-token"**
 
-#### Request
+##### Request
 
 ```
 PATCH https://jsondb.app/db-c07f2fd8fe73045a/auth
@@ -482,7 +486,7 @@ Body: {
 }
 ```
 
-#### Response
+##### Response
 
 ```json
 {
