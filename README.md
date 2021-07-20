@@ -111,8 +111,8 @@ GET https://jsondb.app/db-c07f2fd8fe73045a/items/551f225bb77ea84b91a1bfaa
   "statusCode": 200,
   "data": {
     "_id": "551f225bb77ea84b91a1bfaa",
-    "_createdAt": 1626699085422,
-    "_updatedAt": 1626699085422,
+    "_createdAt": 1626699085423,
+    "_updatedAt": 1626699085423,
     "title": "sample document"
   }
 }
