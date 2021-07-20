@@ -214,7 +214,7 @@ DELETE https://jsondb.app/db-c07f2fd8fe73045a/items/551f225bb77ea84b91a1bfaa
 }
 ```
 
-### Filter documents by query
+## Filter documents by query
 
 Filters can be applied through querystring.
 
@@ -265,7 +265,7 @@ Filter documents which has an array field `categories` including all of [`game`,
 GET https://jsondb.app/db-c07f2fd8fe73045a/items?query={"categories":{"$all":["game","entertainment"]}}
 ```
 
-### Sort documents
+## Sort documents
 
 Sort order can be specified in querystring.
 
@@ -276,7 +276,7 @@ GET https://jsondb.app/db-c07f2fd8fe73045a/items?sort={"_createdAt":"desc"}
 GET https://jsondb.app/db-c07f2fd8fe73045a/items?sort={"age":"asc","class":"desc"}
 ```
 
-### Paging
+## Paging
 
 Pagination can be controlled with `limit` and `skip` parameters specified as querystring.
 
@@ -293,7 +293,7 @@ Pagination can be controlled with `limit` and `skip` parameters specified as que
 GET https://jsondb.app/db-c07f2fd8fe73045a/items?limit=10&skip=2
 ```
 
-### Bulk creation
+## Bulk creation
 
 To create multiple documents at once, simply post an array of objects.
 
@@ -312,7 +312,7 @@ Body: [
 ]
 ```
 
-### Private document
+## Private document
 
 To make document private, `Authorization` header can be specified with bearer token.
 
@@ -355,7 +355,7 @@ Headers: {
 }
 ```
 
-### Bulk deletion by query
+## Bulk deletion by query
 
 To delete all of private documents, `DELETE /:db/:collection` can be requested with token.
 
@@ -390,7 +390,7 @@ Headers: {
 }
 ```
 
-### Authentication
+## Authentication
 
 Every database has a special collection named `auth` in which pairs of id and password can be stored.
 
@@ -398,7 +398,7 @@ It's a toy function which is too weak to use as real authentication, but actuall
 
 **(Don't use this to store sensitive user information, especially related to real payment or something.)**
 
-#### Create or authorize account
+### Create or authorize account
 
 To create a record, make PUT request to the collection with id and password.
 
@@ -410,7 +410,7 @@ Then a response with `token` will be returned. This `token` can be used with `Au
 
 If same id and password are specified, always same token will be returned.
 
-##### Request
+#### Request
 
 ```
 PUT https://jsondb.app/db-c07f2fd8fe73045a/auth
@@ -420,7 +420,7 @@ Body: {
 }
 ```
 
-##### Response
+#### Response
 
 ```json
 {
@@ -433,7 +433,7 @@ Body: {
 
 If a invalid password is specified, response with status 401 will be returned.
 
-##### Request
+#### Request
 
 ```
 PUT https://jsondb.app/db-c07f2fd8fe73045a/auth
@@ -443,7 +443,7 @@ Body: {
 }
 ```
 
-##### Response
+#### Response
 
 ```json
 {
@@ -453,13 +453,13 @@ Body: {
 }
 ```
 
-#### Update id, password or create new account based on auth token
+### Update id, password or create new account based on auth token
 
 To update id, password or create new record based on Authorization token, make PATCH request with payload.
 
 **Update password for id "test"**
 
-##### Request
+#### Request
 
 ```
 PATCH https://jsondb.app/db-c07f2fd8fe73045a/auth
@@ -471,7 +471,7 @@ Body: {
 }
 ```
 
-##### Response
+#### Response
 
 ```json
 {
@@ -484,7 +484,7 @@ Body: {
 
 **Create new record with token "test-token"**
 
-##### Request
+#### Request
 
 ```
 PATCH https://jsondb.app/db-c07f2fd8fe73045a/auth
@@ -497,7 +497,7 @@ Body: {
 }
 ```
 
-##### Response
+#### Response
 
 ```json
 {
@@ -508,7 +508,7 @@ Body: {
 }
 ```
 
-### Protected DB
+## Protected DB
 
 To make database protected, `x-api-key` header can be specified when a very first document is created.
 
@@ -531,24 +531,31 @@ Making db protected with `x-api-key` works only for first time of document creat
 
 This means that when any document has already been created without `x-api-key` into a db, then this db never can be turned into a protected one.
 
-### Limitation
+## Limitation
+
+Sorry for unconvenience, but free public instance [`https://jsondb.app`](https://jsondb.app) has some limitations to stay for free as long as possible.
+
+And these limitations will probably be updated in the future.
 
 - Max 50KB of request body
 - Max 4096 length of one string field
 - Max 1024 length of one array field
 - Max 100 items of one time bulk creation
-- Documents will be deleted after 30 days from creation
-- 10 seconds of one query execution (`GET,DELETE /:db/:collection`)
+- 10 seconds of one query execution (`GET /:db/:collection`)
+- Documents will be regularly deleted after 30 days from creation
+- Documents will be randomly deleted during maintenance sometimes
 
-### Serve own instance with Docker
+If you want to get rid of those limitations, consider hosting your own instance by yourself.
 
-`jsondb` is registered at [dockerhub](https://hub.docker.com/r/yuhsak/jsondb), so that you can easily serve your own instance with Docker.
+## Serve own instance with Docker
+
+`jsondb` is registered at [dockerhub](https://hub.docker.com/r/yuhsak/jsondb), so that you can easily serve your own instance with Docker without any limitations like above.
 
 Note that `jsondb` uses `MongoDB` as its backed Database, there must be an accessible mongodb server before starting `jsondb` instance.
 
 While `jsondb` doesn't validate user's input query perfectly, please don't forget to serve mongodb with **--noscripting** option to avoid unexpected script injection.
 
-#### Run jsondb instance
+### With docker run
 
 If a mongodb instance can be accessed at `localhost` and listening on port `27017`, the docker command to run jsondb instance would be something like below.
 
@@ -556,7 +563,7 @@ If a mongodb instance can be accessed at `localhost` and listening on port `2701
 docker run -p 8000:8000 -e DB_HOST=localhost -e DB_PORT=27017 -e SERVER_HOST=localhost -e SERVER_PORT=8000 -e ENABLE_CORS=true -e ENABLE_LOGGER=true -e LOGGER_PRETTY_PRINT=true yuhsak/jsondb:latest
 ```
 
-#### Example docker-compose.yml including mongodb
+### With docker-compose including mongodb
 
 ```yaml
 version: '3.1'
@@ -586,88 +593,91 @@ services:
     command: --noscripting
 ```
 
-#### Environment variables
+### Environment variables
 
-- **Basic Settings**
-  - `DB_HOST`
-    - Hostname of mongodb server.
-    - default: `localhost`
-  - `DB_PORT`
-    - Listening port of mongodb server.
-    - default: `27017`
-  - `SERVER_HOST`
-    - Hostname of jsondb server.
-    - default: `localhost`
-  - `SERVER_PORT`
-    - Listening port of jsondb server.
-    - default: `8000`
-  - `TRUST_PROXY`
-    - Wheather to trust headers from reverse proxy.
-    - Set this to `true` if the jsondb server is behind a reverse proxy server (ex. Nginx, LoadBalancer).
-    - default: `false`
-  - `AES_PASSWORD`
-    - Internally used password for AES encryption.
-    - **Do not leave this as default value in any public environment.**
-    - default: `password`
-  - `AES_SALT`
-    - Internally used salt for AES encryption.
-    - **Do not leave this as default value in any public environment.**
-    - default: `salt`
-  - `ENABLE_CORS`
-    - Wheather to enable headers for Cross Origin Resource Sharing.
-    - Set this to `true` if jsondb server will communicate with web-browser based applications
-    - default: `false`
-  - `CORS_ORIGIN`
-    - Accepted origins for CORS. Can be specified multiple values with comma separated format.
-    - Set this to `*` to accept any origins.
-    - example: `*` `example.com,app.example.com`
-    - default: `*`
+#### Basic Settings
 
-- **Logging**
-  - `ENABLE_LOGGER`
-    - Wheather to output access logs into stdout.
-    - default: `false`
-  - `LOGGER_LEVEL`
-    - Log level.
-    - default: `info`
-  - `LOGGER_PRETTY_PRINT`
-    - Wheather to enable pretty print option for logger.
-    - default: `false`
+- `DB_HOST`
+  - Hostname of mongodb server.
+  - default: `localhost`
+- `DB_PORT`
+  - Listening port of mongodb server.
+  - default: `27017`
+- `SERVER_HOST`
+  - Hostname of jsondb server.
+  - default: `localhost`
+- `SERVER_PORT`
+  - Listening port of jsondb server.
+  - default: `8000`
+- `TRUST_PROXY`
+  - Wheather to trust headers from reverse proxy.
+  - Set this to `true` if the jsondb server is behind a reverse proxy server (ex. Nginx, LoadBalancer).
+  - default: `false`
+- `AES_PASSWORD`
+  - Internally used password for AES encryption.
+  - **Do not leave this as default value in any public environment.**
+  - default: `password`
+- `AES_SALT`
+  - Internally used salt for AES encryption.
+  - **Do not leave this as default value in any public environment.**
+  - default: `salt`
+- `ENABLE_CORS`
+  - Wheather to enable headers for Cross Origin Resource Sharing.
+  - Set this to `true` if jsondb server will communicate with web-browser based applications
+  - default: `false`
+- `CORS_ORIGIN`
+  - Accepted origins for CORS. Can be specified multiple values with comma separated format.
+  - Set this to `*` to accept any origins.
+  - example: `*` `example.com,app.example.com`
+  - default: `*`
 
-- **Limitation**
-  - `MAX_BODY_SIZE_KB`
-    - Maximum size of each request body in KB.
-    - default: `50`
-  - `MAX_PARAM_LENGTH`
-    - Maximum length of characters for path parameters such as database names and collection names.
-    - default: `128`
-  - `MAX_STRING_LENGTH`
-    - Maximum length of characters for `string` type field value in each document.
-    - default: `4096`
-  - `MAX_ARRAY_LENGTH`
-    - Maximum length for `array` type field value in each document.
-    - default: `1024`
-  - `MIN_AUTH_ID_LENGTH`
-    - Minimum length of characters for `id` field value in `auth` collection.
-    - default: `8`
-  - `MAX_AUTH_ID_LENGTH`
-    - Maximum length of characters for `id` field value in `auth` collection.
-    - default: `1024`
-  - `MIN_AUTH_PASSWORD_LENGTH`
-    - Minimum length of characters for `password` field value in `auth` collection.
-    - default: `8`
-  - `MAX_AUTH_PASSWORD_LENGTH`
-    - Maximum length of characters for `password` field value in `auth` collection.
-    - default: `1024`
-  - `MIN_API_KEY_LENGTH`
-    - Minimum length of characters for `x-api-key` value in request headers.
-    - default: `8`
-  - `MAX_API_KEY_LENGTH`
-    - Maximum length of characters for `x-api-key` value in request headers.
-    - default: `1024`
-  - `MAX_BULK_CREATION_LENGTH`
-    - Maximum number of items for bulk creation at one time.
-    - default: `100`
-  - `MAX_QUERY_EXECUTION_SEC`
-    - Maximum time for waiting query execution in seconds.
-    - default: `10`
+#### Logging
+
+- `ENABLE_LOGGER`
+  - Wheather to output access logs into stdout.
+  - default: `false`
+- `LOGGER_LEVEL`
+  - Log level.
+  - default: `info`
+- `LOGGER_PRETTY_PRINT`
+  - Wheather to enable pretty print option for logger.
+  - default: `false`
+
+#### Limitation
+
+- `MAX_BODY_SIZE_KB`
+  - Maximum size of each request body in KB.
+  - default: `50`
+- `MAX_PARAM_LENGTH`
+  - Maximum length of characters for path parameters such as database names and collection names.
+  - default: `128`
+- `MAX_STRING_LENGTH`
+  - Maximum length of characters for `string` type field value in each document.
+  - default: `4096`
+- `MAX_ARRAY_LENGTH`
+  - Maximum length for `array` type field value in each document.
+  - default: `1024`
+- `MIN_AUTH_ID_LENGTH`
+  - Minimum length of characters for `id` field value in `auth` collection.
+  - default: `8`
+- `MAX_AUTH_ID_LENGTH`
+  - Maximum length of characters for `id` field value in `auth` collection.
+  - default: `1024`
+- `MIN_AUTH_PASSWORD_LENGTH`
+  - Minimum length of characters for `password` field value in `auth` collection.
+  - default: `8`
+- `MAX_AUTH_PASSWORD_LENGTH`
+  - Maximum length of characters for `password` field value in `auth` collection.
+  - default: `1024`
+- `MIN_API_KEY_LENGTH`
+  - Minimum length of characters for `x-api-key` value in request headers.
+  - default: `8`
+- `MAX_API_KEY_LENGTH`
+  - Maximum length of characters for `x-api-key` value in request headers.
+  - default: `1024`
+- `MAX_BULK_CREATION_LENGTH`
+  - Maximum number of items for bulk creation at one time.
+  - default: `100`
+- `MAX_QUERY_EXECUTION_SEC`
+  - Maximum time for waiting query execution in seconds.
+  - default: `10`
