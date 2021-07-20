@@ -628,7 +628,7 @@ services:
   - default: `DEFAULT`
 - `DB_CONNECTION_QUERY`
   - Additional connection config as a querystring.
-  - TLS related configs also can be specified with this variable.
+  - TLS related configs also can be specified within this variable.
   - Examples
     - `tls=true&tlsCertificateKeyFile=tls-key.cer`
     - `poolSize=20&writeConcern=majority`
