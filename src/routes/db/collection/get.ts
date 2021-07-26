@@ -3,6 +3,7 @@ import { Type } from '@sinclair/typebox'
 import { Collection, Paging, Sort, Query, ApiKey } from '../../../schema'
 import { parseAsObject } from '../../../util'
 import { findAndSerializeByQuery } from '../../../db'
+import { JsondbError } from '../../../error'
 
 export const get: FastifyPluginAsync = async (fastify) => {
   fastify.get<{ Params: Collection; Querystring: Paging & Sort & Query; Headers: ApiKey }>(
@@ -17,21 +18,14 @@ export const get: FastifyPluginAsync = async (fastify) => {
       const apiKey = req.headers['x-api-key']
       const query = _query ? parseAsObject(_query) : {}
       if (query === null) {
-        reply.code(400)
-        throw new Error('QueryInvalid')
+        throw new JsondbError('QueryInvalid')
       }
       const sort = _sort ? parseAsObject(_sort) : {}
       if (sort === null) {
-        reply.code(400)
-        throw new Error('SortInvalid')
+        throw new JsondbError('SortInvalid')
       }
-      try {
-        const documents = await findAndSerializeByQuery({ db, collection })({ skip, limit, sort, query, mode, token, apiKey })
-        return { statusCode: 200, data: documents }
-      } catch (e) {
-        reply.code(401)
-        throw e
-      }
-    }
+      const documents = await findAndSerializeByQuery({ db, collection })({ skip, limit, sort, query, mode, token, apiKey })
+      return { statusCode: 200, data: documents }
+    },
   )
 }

@@ -1,5 +1,6 @@
 import type { FastifyPluginAsync } from 'fastify'
 import { DB } from '../schema'
+import { JsondbError } from '../error'
 
 export const prohibitedDbs = [
   'admin',
@@ -45,8 +46,7 @@ export const validateDb: FastifyPluginAsync = async (fastify, opt) => {
   fastify.addHook<{ Params: DB }>('onRequest', async (req, reply) => {
     const { db } = req.params
     if (prohibitedDbs.includes(db.toLowerCase())) {
-      reply.code(404)
-      throw new Error('DBNotFound')
+      throw new JsondbError('DatabaseNotFound')
     }
   })
 }

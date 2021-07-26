@@ -7,12 +7,7 @@ const validateRateLimit =
     fastify.addHook('onRequest', async (req, reply) => {
       const ipAddress = req.ip
       const type = _type === 'auth' ? 'auth' : req.method === 'GET' ? 'read' : 'write'
-      try {
-        await ensureRateLimit({ type })({ ipAddress })
-      } catch (e) {
-        reply.code(400)
-        throw e
-      }
+      await ensureRateLimit({ type })({ ipAddress })
     })
   }
 

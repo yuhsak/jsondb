@@ -5,6 +5,7 @@ import { AES_PASSWORD, AES_SALT } from '../config'
 import { findOneByToken, findOneByDataId } from './find'
 import { insertOne } from './insert'
 import { ensureApiKey } from './config'
+import { JsondbError } from '../error'
 
 const { encrypt } = createCipher(AES_PASSWORD, AES_SALT)
 
@@ -31,7 +32,7 @@ export const getOrInsertAuth = async ({ db }: { db: string }, { id, password, ap
     return { token }
   }
   if (document.data.password !== encrypt(password)) {
-    throw new Error('PasswordInvalid')
+    throw new JsondbError('PasswordInvalid')
   }
   const { _token } = document
   return { token: _token as string }
@@ -43,7 +44,7 @@ export const upsertAuthByToken = async ({ db }: { db: string }, { id, password, 
   const _updatedAt = new Date().getTime()
   if (!document) {
     if (!id) {
-      throw new Error('IdNotSpecified')
+      throw new JsondbError('IdNotSpecified')
     }
     if (!password) {
       throw new Error('PasswordNotSpecified')
@@ -52,7 +53,7 @@ export const upsertAuthByToken = async ({ db }: { db: string }, { id, password, 
       await insertOne({ db, collection: 'auth' })({ data: { id, password: encrypt(password) }, token, apiKey })
     } catch (e) {
       if (e.code === 11000) {
-        throw new Error('IdDuplicated')
+        throw new JsondbError('PasswordNotSpecified')
       }
       throw e
     }
@@ -73,7 +74,7 @@ export const upsertAuthByToken = async ({ db }: { db: string }, { id, password, 
     )
   } catch (e) {
     if (e.code === 11000) {
-      throw new Error('IdDuplicated')
+      throw new JsondbError('IdDuplicated')
     }
     throw e
   }

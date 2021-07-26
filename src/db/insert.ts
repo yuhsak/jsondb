@@ -5,6 +5,7 @@ import type { Collection } from '../schema'
 import { serialize, omitMeta, splitMeta, decorateKeyForData } from '../util'
 import { findOneById } from './find'
 import { ensureApiKey } from './config'
+import { JsondbError } from '../error'
 
 const ensureIndex = async (collection: MongoCollection<Document>) => {
   try {
@@ -39,7 +40,7 @@ export const upsertOneById = (db: Collection) => {
     const now = new Date().getTime()
     const document = await findOne({ query: { id }, apiKey })
     if (document && document._token && document._token !== _token) {
-      throw new Error('TokenInvalid')
+      throw new JsondbError('TokenInvalid')
     }
     const filter = { _id: new ObjectId(id) }
     const data = {
@@ -64,7 +65,7 @@ export const upsertOneById = (db: Collection) => {
     }
     const upserted = await findOne({ query: { id: filter._id }, apiKey })
     if (!upserted) {
-      throw new Error('InsertFailed')
+      throw new JsondbError('InsertFailed')
     }
     ensureIndex(collection)
     return upserted

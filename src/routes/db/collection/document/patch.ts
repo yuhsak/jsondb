@@ -11,13 +11,8 @@ export const patch: FastifyPluginAsync = async (fastify, opt) => {
       const data = req.body
       const token = req.headers.authorization
       const apiKey = req.headers['x-api-key']
-      try {
-        const document = await upsertAndSerializeOneById({ db, collection })({ data, id, token, apiKey, merge: true })
-        return { statusCode: 200, data: document }
-      } catch (e) {
-        reply.code(401)
-        throw e
-      }
-    }
+      const document = await upsertAndSerializeOneById({ db, collection })({ data, id, token, apiKey, merge: true })
+      return { statusCode: 200, data: document }
+    },
   )
 }

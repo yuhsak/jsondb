@@ -4,6 +4,7 @@ import type { Collection } from '../schema'
 import { findOneById } from './find'
 import { ensureApiKey } from './config'
 import { createQuery } from '../util'
+import { JsondbError } from '../error'
 
 export const deleteOneById =
   (db: Collection) =>
@@ -11,7 +12,7 @@ export const deleteOneById =
     const collection = await getCollection(db)
     const document = await findOneById(db)({ query: { id }, apiKey })
     if (document && document._token && document._token !== token) {
-      throw new Error('TokenInvalid')
+      throw new JsondbError('TokenInvalid')
     }
     const { deletedCount } = await collection.deleteOne({ _id: new ObjectId(id) })
     return { count: deletedCount }

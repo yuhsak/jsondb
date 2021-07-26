@@ -9,6 +9,7 @@ import {
   IP_RATE_LIMIT_AUTH_PER_MS,
   IP_RATE_LIMIT_AUTH_THRESHOLD,
 } from '../config'
+import { JsondbError } from '../error'
 
 const ensureIndex = async (collection: Collection<Document>) => {
   try {
@@ -51,6 +52,6 @@ export const ensureRateLimit =
     const threshold = type === 'read' ? IP_RATE_LIMIT_READ_THRESHOLD : type === 'write' ? IP_RATE_LIMIT_WRITE_THRESHOLD : IP_RATE_LIMIT_AUTH_THRESHOLD
     const access = await getOrCreateRateLimit({ type, perMs, threshold })({ ipAddress })
     if (access.n > threshold) {
-      throw new Error('RateLimitExceeded')
+      throw new JsondbError('RateLimitExceeded')
     }
   }

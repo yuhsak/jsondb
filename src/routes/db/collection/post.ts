@@ -12,17 +12,12 @@ export const post: FastifyPluginAsync = async (fastify) => {
       const token = req.headers.authorization
       const apiKey = req.headers['x-api-key']
       const insert = insertAndSerializeOne({ db, collection })
-      try {
-        if (Array.isArray(data)) {
-          const documents = await Promise.all(data.map((data) => insert({ data, token, apiKey })))
-          return { statusCode: 200, data: documents }
-        }
-        const document = await insert({ data, token, apiKey })
-        return { statusCode: 200, data: document }
-      } catch (e) {
-        reply.code(401)
-        throw e
+      if (Array.isArray(data)) {
+        const documents = await Promise.all(data.map((data) => insert({ data, token, apiKey })))
+        return { statusCode: 200, data: documents }
       }
-    }
+      const document = await insert({ data, token, apiKey })
+      return { statusCode: 200, data: document }
+    },
   )
 }

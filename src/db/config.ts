@@ -1,5 +1,6 @@
 import { getCollection } from './client'
 import type { DB } from '../schema'
+import { JsondbError } from '../error'
 
 export type Config = { apiKey?: string }
 
@@ -20,6 +21,6 @@ export const ensureApiKey =
   async ({ apiKey, create }: { apiKey?: string; create?: boolean }) => {
     const systemInfo = await getOrCreateConfig(db)({ apiKey, create })
     if (systemInfo.apiKey && systemInfo.apiKey !== apiKey) {
-      throw new Error('ApiKeyInvalid')
+      throw new JsondbError('ApiKeyInvalid')
     }
   }

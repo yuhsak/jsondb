@@ -7,12 +7,7 @@ export const put: FastifyPluginAsync = async (fastify, opt) => {
     const { db } = req.params
     const { id, password } = req.body
     const apiKey = req.headers['x-api-key']
-    try {
-      const data = await getOrInsertAuth({ db }, { id, password, apiKey })
-      return { statusCode: 200, data }
-    } catch (e) {
-      reply.code(401)
-      throw e
-    }
+    const data = await getOrInsertAuth({ db }, { id, password, apiKey })
+    return { statusCode: 200, data }
   })
 }
