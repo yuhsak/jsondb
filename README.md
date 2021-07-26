@@ -541,7 +541,10 @@ And these limitations will probably be updated in the future.
 - Max 4096 length of one string field
 - Max 1024 length of one array field
 - Max 100 items of one time bulk creation
-- 10 seconds of one query execution (`GET /:db/:collection`)
+- Max 10 seconds of one query execution (`GET /:db/:collection`)
+- Max 10,000 times of `GET` requests per ip, per hour
+- Max 1,000 times of `POST`, `PUT`, `PATCH`, `DELETE` requests per ip, per hour
+- Max 100 times of any requests against `auth` collection per ip, per hour
 - Documents will be regularly deleted after 30 days from creation
 - Documents will be randomly deleted during maintenance sometimes
 
