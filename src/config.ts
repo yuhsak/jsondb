@@ -27,7 +27,7 @@ export const LOGGER_PRETTY_PRINT = process.env.LOGGER_PRETTY_PRINT === 'true'
 export const AES_PASSWORD = process.env.AES_PASSWORD || 'password'
 export const AES_SALT = process.env.AES_SALT || 'salt'
 
-/** Input limitation */
+/** Input Limitation */
 export const MAX_BODY_SIZE_KB = asInt(process.env.MAX_BODY_SIZE_KB) ?? 50
 export const MAX_PARAM_LENGTH = asInt(process.env.MAX_PARAM_LENGTH) ?? 128
 export const MAX_STRING_LENGTH = asInt(process.env.MAX_STRING_LENGTH) ?? 4096
@@ -45,3 +45,12 @@ export const MAX_QUERY_EXECUTION_SEC = asInt(process.env.MAX_QUERY_EXECUTION_SEC
 export const ENABLE_CLEANUP = process.env.ENABLE_CLEANUP === 'true'
 export const CLEANUP_EXCLUDE_DB = process.env.CLEANUP_EXCLUDE_DB ? process.env.CLEANUP_EXCLUDE_DB.split(',') : []
 export const CLEANUP_THRESHOLD = asInt(process.env.CLEANUP_THRESHOLD) ?? 1000 * 60 * 60 * 24 * 30
+
+/** Rate Limit */
+export const ENABLE_IP_RATE_LIMIT = process.env.ENABLE_IP_RATE_LIMIT === 'true'
+export const IP_RATE_LIMIT_READ_THRESHOLD = asInt(process.env.IP_RATE_LIMIT_READ_THRESHOLD) ?? 10000
+export const IP_RATE_LIMIT_READ_PER_MS = asInt(process.env.IP_RATE_LIMIT_READ_PER_MS) ?? 3600000
+export const IP_RATE_LIMIT_WRITE_THRESHOLD = asInt(process.env.IP_RATE_LIMIT_WRITE_THRESHOLD) ?? 1000
+export const IP_RATE_LIMIT_WRITE_PER_MS = asInt(process.env.IP_RATE_LIMIT_WRITE_PER_MS) ?? 3600000
+export const IP_RATE_LIMIT_AUTH_THRESHOLD = asInt(process.env.IP_RATE_LIMIT_AUTH_THRESHOLD) ?? 100
+export const IP_RATE_LIMIT_AUTH_PER_MS = asInt(process.env.IP_RATE_LIMIT_AUTH_PER_MS) ?? 3600000

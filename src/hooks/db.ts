@@ -38,6 +38,7 @@ export const prohibitedDbs = [
   'permission',
   'log',
   'access',
+  'rateLimit',
 ].flatMap((db) => [db, db + 's'])
 
 export const validateDb: FastifyPluginAsync = async (fastify, opt) => {
